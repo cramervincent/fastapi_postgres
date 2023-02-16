@@ -29,3 +29,19 @@ async def login_user(data:schemas.Login, db:Session = Depends(get_db)):
 @router.get('/auth/me', response_model=schemas.ResponseUser)
 async def get_logged_in_user(current_user: str = Depends(get_current_user), db:Session = Depends(get_db)):
     return db.query(models.User).filter(models.User.id == current_user).first()
+
+@router.post('/auth/change-password', response_model=schemas.ResponseUser)
+async def change_password(data: schemas.NewPassword, current_user: str = Depends(get_current_user), db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.id == current_user).first()
+    
+    if not verify_password(data.old, user.hashed_password):
+        raise HTTPException(
+            status_code=403,
+            detail='Oud wachtwoord is niet correct.'
+        )
+    user.hashed_password = hash_password(data.new)
+    db.commit()
+    db.refresh(user)
+    return user
+                
+    

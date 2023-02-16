@@ -39,12 +39,11 @@ async def update_one_user(id:int, data:schemas.UserUpdate, db:Session = Depends(
         raise HTTPException(
             status_code=404
         )
-    # for key, value in data:
-    #     setattr(user, key, value)
-
- 
+     
     for key, value in data:
-        setattr(user, key, value)
+        if not value == None:
+            print(value)
+            setattr(user, key, value)
     
     db.commit()
     db.refresh(user)

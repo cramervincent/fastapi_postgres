@@ -13,7 +13,6 @@ class User(BaseModel):
 
 class UserUpdate(BaseModel):
     is_active: bool | None = None
-    password: str | None = None
     email: str | None = None
     fullname:str | None = None
     role:str | None = None
@@ -33,3 +32,7 @@ class ResponseUser(BaseModel):
 class Login(BaseModel):
     email:str
     password:str
+    
+class NewPassword(BaseModel):
+    old:str
+    new:str
